@@ -8,4 +8,24 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Assets\Body.png" />
+    <None Remove="Assets\DeadBody.png" />
+    <None Remove="Assets\DeadHead.png" />
+    <None Remove="Assets\DroidSansMono.ttf" />
+    <None Remove="Assets\Empty.png" />
+    <None Remove="Assets\Food.png" />
+    <None Remove="Assets\Head.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Body.png" />
+    <Content Include="Assets\DeadBody.png" />
+    <Content Include="Assets\DeadHead.png" />
+    <Content Include="Assets\DroidSansMono.ttf" />
+    <Content Include="Assets\Empty.png" />
+    <Content Include="Assets\Food.png" />
+    <Content Include="Assets\Head.png" />
+  </ItemGroup>
+
 </Project>

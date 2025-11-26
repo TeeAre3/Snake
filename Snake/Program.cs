@@ -1,2 +1,0 @@
-﻿// Snake
-Console.WriteLine("Snake");
