@@ -1,1 +1,3 @@
 gra snake w konsoli
+
+Wkrótce dokonam cudu stworzenia...
