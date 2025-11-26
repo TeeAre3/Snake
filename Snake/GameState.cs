@@ -58,7 +58,7 @@ namespace Snake
         {
             List<Position> empty = new List<Position>(EmptyPositions());
 
-            if(empty.Count == 0)
+            if(empty.Count == 0) 
                 return;
 
             Position pos = empty[random.Next(empty.Count)];
@@ -77,7 +77,7 @@ namespace Snake
 
         public IEnumerable<Position> SnakePositions()
         {
-            return snakePositions
+            return snakePositions;
         }
 
         private void SpawnHead(Position pos)
