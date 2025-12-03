@@ -19,13 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\Body.png" />
-    <Content Include="Assets\DeadBody.png" />
-    <Content Include="Assets\DeadHead.png" />
-    <Content Include="Assets\DroidSansMono.ttf" />
-    <Content Include="Assets\Empty.png" />
-    <Content Include="Assets\Food.png" />
-    <Content Include="Assets\Head.png" />
+    <Resource Include="Assets\Body.png" />
+    <Resource Include="Assets\DeadBody.png" />
+    <Resource Include="Assets\DeadHead.png" />
+    <Resource Include="Assets\DroidSansMono.ttf" />
+    <Resource Include="Assets\Empty.png" />
+    <Resource Include="Assets\Food.png" />
+    <Resource Include="Assets\Head.png" />
   </ItemGroup>
 
 </Project>
