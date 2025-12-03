@@ -27,7 +27,7 @@ namespace Snake
             {GridValue.Food, Images.Food }
         };
 
-        private readonly int rows = 15, cols = 15;
+        private readonly int rows = 25, cols = 25;
         private readonly Image[,] gridImages;
         private GameState gameState;
         private bool gameRunning;
