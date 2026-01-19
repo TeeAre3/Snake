@@ -149,7 +149,7 @@ namespace Snake
             Position head = HeadPosition();
             Position newHeadPos = HeadPosition().Translate(Dir);
 
-            if(Mode == GameMode.WallsWrap)
+            if(Mode == GameMode.WallsWrap || Mode == GameMode.SwapEnds)
             {
                 int r = newHeadPos.Row;
                 int c = newHeadPos.Column;
@@ -179,7 +179,34 @@ namespace Snake
                 SpawnHead(newHeadPos);
                 Score += 10;
                 SpawnFood();
+
+                if (Mode == GameMode.SwapEnds) ReverseSnake();
             }
+        }
+
+        private void ReverseSnake()
+        {
+            List<Position> positions = new List<Position>(snakePositions);
+            positions.Reverse();
+
+            snakePositions.Clear();
+            foreach(var pos in positions) snakePositions.AddLast(pos);
+
+            if (snakePositions.Count > 1)
+            {
+                Position head = snakePositions.First.Value;
+                Position neck = snakePositions.First.Next.Value;
+
+                if (head.Row < neck.Row) Dir = Direction.Up;
+                else if(head.Row > neck.Row) Dir = Direction.Down;
+                else if(head.Column < neck.Column) Dir = Direction.Left;
+                else if(head.Column > neck.Column) Dir = Direction.Right;
+            }
+            else
+            {
+                Dir = Dir.Opposite();
+            }
+            dirChanges.Clear();
         }
     }
 }

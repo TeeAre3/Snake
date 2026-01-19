@@ -70,12 +70,17 @@
                                Foreground="Yellow" 
                                FontSize="18"
                                Margin="0,10,0,0"
-                               HorizontalAlignment="Center"/>
+                               HorizontalAlignment="Left"/>
                     <TextBlock Text="[2] Walls wrap"
                                Foreground="Yellow" 
                                FontSize="18"
                                Margin="0,10,0,0"
-                               HorizontalAlignment="Center"/>
+                               HorizontalAlignment="Left"/>
+                    <TextBlock Text="[3] Swap ends"
+                               Foreground="Yellow" 
+                               FontSize="18"
+                               Margin="0,10,0,0"
+                               HorizontalAlignment="Left"/>
                 </StackPanel>
             </Border>
 

@@ -41,7 +41,7 @@ namespace Snake
         private GameState gameState;
         private UIState _uiState = UIState.MainMenu;
         private GameMode _selectedMode = GameMode.WallsKill;
-        private bool gameRunning;
+
 
         public MainWindow()
         {
@@ -85,6 +85,12 @@ namespace Snake
                 else if(e.Key == Key.D2 || e.Key == Key.NumPad2)
                 {
                     _selectedMode = GameMode.WallsWrap;
+                    _uiState = UIState.Running;
+                    await RunGame();
+                }
+                else if(e.Key == Key.D3 || e.Key == Key.NumPad3)
+                {
+                    _selectedMode = GameMode.SwapEnds;
                     _uiState = UIState.Running;
                     await RunGame();
                 }

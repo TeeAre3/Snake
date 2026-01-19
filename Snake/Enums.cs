@@ -3,7 +3,8 @@
     public enum GameMode
     {
         WallsKill,
-        WallsWrap
+        WallsWrap,
+        SwapEnds
     }
 
 
