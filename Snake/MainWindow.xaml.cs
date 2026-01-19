@@ -61,10 +61,15 @@ namespace Snake
             MenuOverlay.Visibility = Visibility.Hidden;
             gameState = new GameState(rows, cols, _selectedMode);
 
+            GameOverDetails.Visibility = Visibility.Collapsed;
+            OverlayText.Text = "GET READY";
+
             Draw();
             Overlay.Visibility = Visibility.Visible;
             await ShowCountDown();
             Overlay.Visibility = Visibility.Hidden;
+
+            ScoreText.Visibility = Visibility.Visible;
 
             _uiState = UIState.Running;
             await GameLoop();
@@ -162,7 +167,7 @@ namespace Snake
         {
             DrawGrid();
             DrawSnakeHead();
-            ScoreText.Text = $"SCORE {gameState.Score}";
+            ScoreText.Text = $"SCORE: {gameState.Score}\t|\tMODE: {gameState.Mode}";
         }
 
 
@@ -220,8 +225,25 @@ namespace Snake
         {
             await DrawDeadSnake();
             await Task.Delay(1000);
+            await HighScoreManager.SaveScoreAsync(gameState.Score, _selectedMode);
+            HighScoresList.ItemsSource = await HighScoreManager.LoadScoresAsync();
+            OverlayText.Text = "GAME OVER";
+            GameOverDetails.Visibility = Visibility.Visible;
             Overlay.Visibility = Visibility.Visible;
-            OverlayText.Text = "\tGAME OVER\nPRESS ANY KEY FOR MENU";
+        }
+
+        private async void BtnDeleteScore_Click(object sender, RoutedEventArgs e)
+        {
+            if (HighScoresList.SelectedItem is GameScore selectedScore)
+            {
+                var currentList = (List<GameScore>)HighScoresList.ItemsSource;
+
+                await HighScoreManager.DeleteScoreAsync(selectedScore, currentList);
+                HighScoresList.Items.Refresh();
+            }
+            else MessageBox.Show("Wybierz wynik do usunięcia!!");
+
+            this.Focus();
         }
     }
 }
