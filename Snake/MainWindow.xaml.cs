@@ -39,55 +39,82 @@ namespace Snake
         private readonly int rows = 25, cols = 25;
         private readonly Image[,] gridImages;
         private GameState gameState;
+        private UIState _uiState = UIState.MainMenu;
+        private GameMode _selectedMode = GameMode.WallsKill;
         private bool gameRunning;
 
         public MainWindow()
         {
             InitializeComponent();
             gridImages = SetupGrid();
-            gameState = new GameState(rows, cols);
+
+            _selectedMode = GameMode.WallsKill;
+            _uiState = UIState.MainMenu;
+            MenuOverlay.Visibility = Visibility.Visible;
+            Overlay.Visibility = Visibility.Hidden;
+
+            gameState = new GameState(rows, cols, _selectedMode);
         }
 
         private async Task RunGame()
         {
+            MenuOverlay.Visibility = Visibility.Hidden;
+            gameState = new GameState(rows, cols, _selectedMode);
+
             Draw();
+            Overlay.Visibility = Visibility.Visible;
             await ShowCountDown();
             Overlay.Visibility = Visibility.Hidden;
+
+            _uiState = UIState.Running;
             await GameLoop();
             await ShowGameOver();
-            gameState = new GameState(rows, cols);
+            _uiState = UIState.GameOver;
         }
 
-        private async void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        private async void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (Overlay.Visibility == Visibility.Visible)
+            if (_uiState == UIState.MainMenu)
             {
-                e.Handled = true;
+                if(e.Key == Key.D1 || e.Key == Key.NumPad1)
+                {
+                    _selectedMode = GameMode.WallsKill;
+                    _uiState = UIState.Running;
+                    await RunGame();
+                }
+                else if(e.Key == Key.D2 || e.Key == Key.NumPad2)
+                {
+                    _selectedMode = GameMode.WallsWrap;
+                    _uiState = UIState.Running;
+                    await RunGame();
+                }
+                return;
             }
             
-            if(!gameRunning)
+            if(_uiState == UIState.Running)
             {
-                gameRunning = true;
-                await RunGame();
-                gameRunning = false;
+                if (gameState.GameOver) return;
+
+                switch (e.Key)
+                {
+                    case Key.A:
+                        gameState.ChangeDirection(Direction.Left); break;
+                    case Key.D:
+                        gameState.ChangeDirection(Direction.Right); break;
+                    case Key.W:
+                        gameState.ChangeDirection(Direction.Up); break;
+                    case Key.S:
+                        gameState.ChangeDirection(Direction.Down); break;
+                }
             }
-        }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (gameState.GameOver) return;
-
-            switch(e.Key)
+            
+            if(_uiState == UIState.GameOver)
             {
-                case Key.A:
-                    gameState.ChangeDirection(Direction.Left); break;
-                case Key.D:
-                    gameState.ChangeDirection(Direction.Right); break;
-                case Key.W:
-                    gameState.ChangeDirection(Direction.Up); break;
-                case Key.S:
-                    gameState.ChangeDirection(Direction.Down); break;
+                Overlay.Visibility = Visibility.Hidden;
+                MenuOverlay.Visibility = Visibility.Visible;
+                _uiState = UIState.MainMenu;
             }
+
         }
 
         private async Task GameLoop()
@@ -149,6 +176,12 @@ namespace Snake
         private void DrawSnakeHead()
         {
             Position headPos = gameState.HeadPosition();
+
+            if(headPos.Row < 0 ||  headPos.Row >= rows || headPos.Column < 0 || headPos.Column >= cols)
+            {
+                return;
+            }
+
             Image image = gridImages[headPos.Row, headPos.Column];
             image.Source = Images.Head;
 
@@ -182,7 +215,7 @@ namespace Snake
             await DrawDeadSnake();
             await Task.Delay(1000);
             Overlay.Visibility = Visibility.Visible;
-            OverlayText.Text = "PRESS ANY KEY TO START";
+            OverlayText.Text = "\tGAME OVER\nPRESS ANY KEY FOR MENU";
         }
     }
 }

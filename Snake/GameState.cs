@@ -15,15 +15,17 @@ namespace Snake
         public Direction Dir { get; private set; }
         public int Score { get; private set; }
         public bool GameOver { get; private set; }
+        public GameMode Mode { get; private set; }
 
         private readonly LinkedList<Direction> dirChanges = new LinkedList<Direction>();
         public readonly LinkedList<Position> snakePositions = new LinkedList<Position>();
         private readonly Random random = new Random();
 
-        public GameState(int rows, int columns)
+        public GameState(int rows, int columns, GameMode mode)
         {
             Rows = rows;
             Columns = columns;
+            Mode = mode;
             Grid = new GridValue[rows, columns];
             Dir = Direction.Right;
 
@@ -144,8 +146,24 @@ namespace Snake
                 dirChanges.RemoveFirst();
             }
 
+            Position head = HeadPosition();
             Position newHeadPos = HeadPosition().Translate(Dir);
+
+            if(Mode == GameMode.WallsWrap)
+            {
+                int r = newHeadPos.Row;
+                int c = newHeadPos.Column;
+
+                if (r < 0) r = Rows - 1;
+                else if (r >= Rows)  r = 0;
+                if (c < 0) c = Columns - 1;
+                else if (c >= Columns) c = 0;
+
+                newHeadPos = new Position(r, c);
+            }
+
             GridValue hit = WillHit(newHeadPos);
+            
 
             if (hit == GridValue.Outside || hit == GridValue.Snake)
             {
