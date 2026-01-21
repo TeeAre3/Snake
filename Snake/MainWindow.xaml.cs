@@ -39,8 +39,8 @@ namespace Snake
         private readonly int rows = 25, cols = 25;
         private readonly Image[,] gridImages;
         private GameState gameState;
-        private UIState _uiState = UIState.MainMenu;
-        private GameMode _selectedMode = GameMode.WallsKill;
+        private UIState uiState = UIState.MainMenu;
+        private GameMode selectedMode = GameMode.WallsKill;
 
 
         public MainWindow()
@@ -48,18 +48,18 @@ namespace Snake
             InitializeComponent();
             gridImages = SetupGrid();
 
-            _selectedMode = GameMode.WallsKill;
-            _uiState = UIState.MainMenu;
+            selectedMode = GameMode.WallsKill;
+            uiState = UIState.MainMenu;
             MenuOverlay.Visibility = Visibility.Visible;
             Overlay.Visibility = Visibility.Hidden;
 
-            gameState = new GameState(rows, cols, _selectedMode);
+            gameState = new GameState(rows, cols, selectedMode);
         }
 
         private async Task RunGame()
         {
             MenuOverlay.Visibility = Visibility.Hidden;
-            gameState = new GameState(rows, cols, _selectedMode);
+            gameState = new GameState(rows, cols, selectedMode);
 
             GameOverDetails.Visibility = Visibility.Collapsed;
             OverlayText.Text = "GET READY";
@@ -71,38 +71,38 @@ namespace Snake
 
             ScoreText.Visibility = Visibility.Visible;
 
-            _uiState = UIState.Running;
+            uiState = UIState.Running;
             await GameLoop();
             await ShowGameOver();
-            _uiState = UIState.GameOver;
+            uiState = UIState.GameOver;
         }
 
         private async void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (_uiState == UIState.MainMenu)
+            if (uiState == UIState.MainMenu)
             {
                 if(e.Key == Key.D1 || e.Key == Key.NumPad1)
                 {
-                    _selectedMode = GameMode.WallsKill;
-                    _uiState = UIState.Running;
+                    selectedMode = GameMode.WallsKill;
+                    uiState = UIState.Running;
                     await RunGame();
                 }
                 else if(e.Key == Key.D2 || e.Key == Key.NumPad2)
                 {
-                    _selectedMode = GameMode.WallsWrap;
-                    _uiState = UIState.Running;
+                    selectedMode = GameMode.WallsWrap;
+                    uiState = UIState.Running;
                     await RunGame();
                 }
                 else if(e.Key == Key.D3 || e.Key == Key.NumPad3)
                 {
-                    _selectedMode = GameMode.SwapEnds;
-                    _uiState = UIState.Running;
+                    selectedMode = GameMode.SwapEnds;
+                    uiState = UIState.Running;
                     await RunGame();
                 }
                 return;
             }
             
-            if(_uiState == UIState.Running)
+            if(uiState == UIState.Running)
             {
                 if (gameState.GameOver) return;
 
@@ -119,11 +119,11 @@ namespace Snake
                 }
             }
             
-            if(_uiState == UIState.GameOver)
+            if(uiState == UIState.GameOver)
             {
                 Overlay.Visibility = Visibility.Hidden;
                 MenuOverlay.Visibility = Visibility.Visible;
-                _uiState = UIState.MainMenu;
+                uiState = UIState.MainMenu;
             }
 
         }
@@ -169,7 +169,6 @@ namespace Snake
             DrawSnakeHead();
             ScoreText.Text = $"SCORE: {gameState.Score}\t|\tMODE: {gameState.Mode}";
         }
-
 
         private void DrawGrid()
         {
@@ -225,7 +224,7 @@ namespace Snake
         {
             await DrawDeadSnake();
             await Task.Delay(1000);
-            await HighScoreManager.SaveScoreAsync(gameState.Score, _selectedMode);
+            await HighScoreManager.SaveScoreAsync(gameState.Score, selectedMode);
             HighScoresList.ItemsSource = await HighScoreManager.LoadScoresAsync();
             OverlayText.Text = "GAME OVER";
             GameOverDetails.Visibility = Visibility.Visible;

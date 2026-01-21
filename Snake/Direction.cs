@@ -1,5 +1,4 @@
-﻿
-namespace Snake
+﻿namespace Snake
 {
     public record Direction(int RowOffset, int ColumnOffset)
     {
